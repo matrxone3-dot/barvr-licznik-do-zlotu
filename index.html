@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarVR - Odliczanie do Zlotu</title>
+
+    <!-- Meta Tagi Open Graph (Podgląd dla Messengera / Facebooka) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ZLOT BarVR 2026 - ODLICZANIE">
+    <meta property="og:description" content="Widzimy się w Szarlocie! Sprawdź ile czasu zostało do startu.">
+    
+    <!-- Główna miniatura (GIF) z pełnym adresem URL -->
+    <meta property="og:image" content="https://transcendent-otter-2838fa.netlify.app/barvr.gif">
+    <meta property="og:image:secure_url" content="https://transcendent-otter-2838fa.netlify.app/barvr.gif">
+    <meta property="og:image:type" content="image/gif">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Alternatywna miniatura (PNG) - Messenger użyje jej, jeśli GIF nie zadziała -->
+    <meta property="og:image" content="https://transcendent-otter-2838fa.netlify.app/1000059841.png">
+    <meta property="og:image:secure_url" content="https://transcendent-otter-2838fa.netlify.app/1000059841.png">
+    <meta property="og:image:type" content="image/png">
+
+    <style>
+        /* Ładowanie czcionki lokalnej */
+        @font-face {
+            font-family: 'Shlop';
+            src: url('shlop rg.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            font-family: 'Shlop', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Tło strony */
+        .page-wrapper {
+            width: 100vw;
+            height: 100vh;
+            background: url('1000059841.png') no-repeat center center;
+            background-size: contain;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Kontener licznika */
+        .countdown-container {
+            text-align: center;
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+        }
+
+        /* Stylizacja krwisto czerwonych cyfr */
+        .textured-text {
+            color: #8a0303;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 15px rgba(138, 3, 3, 0.4);
+            background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            -webkit-background-clip: text;
+            text-transform: uppercase;
+            line-height: 0.8;
+            display: inline-block;
+        }
+
+        .days-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
+
+        #days-num {
+            font-size: clamp(70px, 14vw, 150px);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        #days-label {
+            font-size: clamp(30px, 7vw, 70px);
+            letter-spacing: 5px;
+            display: block;
+        }
+
+        /* Sekcja godzin, minut i sekund */
+        .sub-units {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .unit-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #hours, #minutes {
+            font-size: clamp(25px, 5vw, 45px);
+        }
+
+        #seconds {
+            font-size: clamp(15px, 2.5vw, 22px);
+            opacity: 0.9;
+        }
+
+        .label-small {
+            font-size: clamp(7px, 1vw, 10px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif;
+            margin-top: 2px;
+            color: #ffffff;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <div class="countdown-container">
+        <div class="days-wrapper">
+            <span id="days-num" class="textured-text">0</span>
+            <span id="days-label" class="textured-text">DNI</span>
+        </div>
+
+        <div class="sub-units">
+            <div class="unit-group">
+                <span id="hours" class="textured-text">00</span>
+                <span class="label-small">Godziny</span>
+            </div>
+            <div class="unit-group">
+                <span id="minutes" class="textured-text">00</span>
+                <span class="label-small">Minuty</span>
+            </div>
+            <div class="unit-group">
+                <span id="seconds" class="textured-text">00</span>
+                <span class="label-small">Sekundy</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const targetDate = new Date("June 4, 2026 00:00:00").getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days-num").innerHTML = days;
+        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+
+        if (distance < 0) {
+            clearInterval(interval);
+            document.querySelector(".countdown-container").innerHTML = "<h1 class='textured-text'>START!</h1>";
+        }
+    }
+
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+</script>
+
+</body>
+</html>
